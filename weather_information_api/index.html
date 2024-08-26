@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Information</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    .error {
+      color: red;
+      font-size: 1.2rem;
+    }
+    .weather-info {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      display: inline-block;
+      text-align: left;
+    }
+    input {
+      padding: 10px;
+      font-size: 1rem;
+      margin-right: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: none;
+      background-color: #28a745;
+      color: #fff;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Weather Information</h1>
+  <form id="weatherForm">
+    <input type="text" id="city" placeholder="Enter city name" required>
+    <button type="submit">Get Weather</button>
+  </form>
+  <p id="error" class="error"></p>
+  <div id="weatherInfo" class="weather-info"></div>
+
+  <script>
+    document.getElementById('weatherForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const city = document.getElementById('city').value;
+      const errorElement = document.getElementById('error');
+      const weatherElement = document.getElementById('weatherInfo');
+
+      try {
+        const response = await fetch(`http://localhost:5000/weather/${city}`);
+        if (!response.ok) {
+          throw new Error(await response.text());
+        }
+        const data = await response.json();
+        errorElement.textContent = '';
+        weatherElement.innerHTML = `
+          <h2>${data.location}, ${data.region}, ${data.country}</h2>
+          <p>Temperature: ${data.temperature_c}°C / ${data.temperature_f}°F</p>
+          <p>Condition: ${data.condition}</p>
+          <p>Wind Speed: ${data.wind_mph} mph / ${data.wind_kph} kph</p>
+          <p>Humidity: ${data.humidity}%</p>
+          <p>Last Updated: ${data.last_updated}</p>
+        `;
+      } catch (error) {
+        errorElement.textContent = error.message;
+        weatherElement.innerHTML = '';
+      }
+    });
+  </script>
+</body>
+</html>
