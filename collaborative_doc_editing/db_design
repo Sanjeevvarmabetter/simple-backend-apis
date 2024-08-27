@@ -1,0 +1,15 @@
+Database Design
+Documents Collection:
+
+document_id: Unique identifier.
+title: Document title.
+content: The actual content of the document.
+versions: Array of document versions for version control.
+created_by: User who created the document.
+collaborators: List of users who can edit the document.
+Users Collection:
+
+user_id: Unique identifier.
+username: Username for login.
+password_hash: Hashed password for authentication.
+documents: Array of document IDs the user has access to.
